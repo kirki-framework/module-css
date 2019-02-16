@@ -10,6 +10,7 @@
  */
 
 namespace Kirki\Modules\CSS\Property;
+
 use Kirki\Modules\CSS\Property;
 
 /**

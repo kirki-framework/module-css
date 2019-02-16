@@ -9,7 +9,7 @@
  * @since      2.2.0
  */
 
-namespace Kirki\Modules\CSS\Field\Typography;
+namespace Kirki\Modules\CSS\Field;
 
 use Kirki\Modules\CSS\Output;
 

@@ -9,6 +9,8 @@
  * @since      3.0.10
  */
 
+namespace Kirki\Modules\CSS\Field;
+
 use Kirki\Modules\CSS\Output;
 
 /**

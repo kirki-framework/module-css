@@ -10,6 +10,8 @@
  * @since       2.2.0
  */
 
+namespace Kirki\Modules\CSS;
+
 /**
  * Output for CSS properties.
  */
