@@ -120,10 +120,10 @@ final class Generator {
 	 */
 	private function __construct() {
 		if ( is_null( self::$google_fonts ) ) {
-			self::$google_fonts = Kirki_Fonts::get_google_fonts();
+			self::$google_fonts = \Kirki_Fonts::get_google_fonts();
 		}
 		if ( is_null( self::$backup_fonts ) ) {
-			self::$backup_fonts = Kirki_Fonts::get_backup_fonts();
+			self::$backup_fonts = \Kirki_Fonts::get_backup_fonts();
 		}
 	}
 
@@ -167,7 +167,7 @@ final class Generator {
 		self::$value = Values::get_sanitized_field_value( $field );
 
 		// Find the class that will handle the outpout for this field.
-		$classname            = '\Kirki\Module\CSS\Output';
+		$classname            = '\Kirki\Modules\CSS\Output';
 		$default_classnames   = array(
 			'kirki-background' => '\Kirki\Modules\CSS\Field\Background',
 			'kirki-dimensions' => '\Kirki\Modules\CSS\Field\Dimensions',
