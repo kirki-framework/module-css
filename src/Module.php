@@ -101,9 +101,9 @@ class Module {
 				$priority = absint( $config['styles_priority'] );
 			}
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), $priority );
+		} else {
+			add_action( 'wp_head', array( $this, 'print_styles_inline' ), 999 );
 		}
-
-		add_action( 'wp_head', array( $this, 'print_styles_inline' ), 999 );
 	}
 
 	/**
