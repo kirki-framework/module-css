@@ -128,14 +128,17 @@ class Module {
 	 */
 	public function enqueue_styles() {
 
+		$args = array(
+			'action' => apply_filters( 'kirki_styles_action_handle', 'kirki-styles' ),
+		);
+		if ( is_admin() && ! is_customize_preview() ) {
+			$args['editor'] = '1';
+		}
+
 		// Enqueue the dynamic stylesheet.
 		wp_enqueue_style(
 			'kirki-styles',
-			add_query_arg(
-				'action',
-				apply_filters( 'kirki_styles_action_handle', 'kirki-styles' ),
-				site_url()
-			),
+			add_query_arg( $args, site_url() ),
 			array(),
 			KIRKI_VERSION
 		);
