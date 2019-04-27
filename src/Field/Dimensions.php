@@ -32,8 +32,6 @@ class Dimensions extends Output {
 				'element'     => '',
 				'property'    => '',
 				'media_query' => 'global',
-				'prefix'      => '',
-				'suffix'      => '',
 			]
 		);
 
@@ -54,7 +52,7 @@ class Dimensions extends Output {
 			if ( false !== strpos( $output['property'], '%%' ) ) {
 				$property = str_replace( '%%', $key, $output['property'] );
 			}
-			$this->styles[ $output['media_query'] ][ $output['element'] ][ $property ] = $output['prefix'] . $this->process_property_value( $property, $value[ $key ] ) . $output['suffix'];
+			$this->styles[ $output['media_query'] ][ $output['element'] ][ $property ] = $this->process_property_value( $property, $value[ $key ] );
 		}
 	}
 }

@@ -90,7 +90,7 @@ class Output {
 				return;
 			}
 
-			$value      = $output_obj->get_value();
+			$value = $output_obj->get_value();
 
 			if ( isset( $output['element'] ) && is_array( $output['element'] ) ) {
 				$output['element'] = array_unique( $output['element'] );
@@ -144,11 +144,11 @@ class Output {
 			if ( isset( $this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] ) && ! is_array( $this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] ) ) {
 				$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = (array) $this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ];
 			}
-			$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ][] = $output['prefix'] . $value . $output['units'] . $output['suffix'];
+			$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ][] = $value;
 			return;
 		}
 		if ( is_string( $value ) || is_numeric( $value ) ) {
-			$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = $output['prefix'] . $this->process_property_value( $output['property'], $value ) . $output['units'] . $output['suffix'];
+			$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = $this->process_property_value( $output['property'], $value );
 		}
 	}
 

@@ -28,8 +28,6 @@ class Typography extends Output {
 	protected function process_output( $output, $value ) {
 		$output['media_query'] = ( isset( $output['media_query'] ) ) ? $output['media_query'] : 'global';
 		$output['element']     = ( isset( $output['element'] ) ) ? $output['element'] : 'body';
-		$output['prefix']      = ( isset( $output['prefix'] ) ) ? $output['prefix'] : '';
-		$output['suffix']      = ( isset( $output['suffix'] ) ) ? $output['suffix'] : '';
 
 		$value = \Kirki\Field\Typography::sanitize( $value );
 
@@ -94,7 +92,7 @@ class Typography extends Output {
 			}
 			$property       = ( isset( $output['choice'] ) && isset( $output['property'] ) ) ? $output['property'] : $property;
 			$property_value = ( is_array( $property_value ) && isset( $property_value[0] ) ) ? $property_value[0] : $property_value;
-			$this->styles[ $output['media_query'] ][ $output['element'] ][ $property ] = $output['prefix'] . $property_value . $output['suffix'];
+			$this->styles[ $output['media_query'] ][ $output['element'] ][ $property ] = $property_value;
 		}
 	}
 }

@@ -114,15 +114,20 @@ class Output_CSS {
 	 */
 	public function populate_css_array() {
 
-		$this->css_array = [];
-
 		// Early exit if we don't have an element defined.
-		if ( null === $output['element'] ) {
+		if ( null === $this->output['element'] ) {
 			return;
 		}
 
 		// Add the media-query.
-		$this->css_array[ $output['media_query'] ] = [];
+		$this->css_array = [
+			$this->output['media_query'] = [
+				$this->output['element'] = [],
+			],
+		];
+
+		// Add the element.
+		$this->css_array
 	}
 	
 	/**
@@ -157,6 +162,10 @@ class Output_CSS {
 			// Apply value_pattern & pattern_replace to the value.
 			$this->apply_value_pattern();
 			$this->apply_pattern_replace();
+		}
+
+		if ( ! is_array( $this->value ) ) {
+			return $this->output['prefix'] . $this->value . $this->output['units'] . $this->output['suffix'];
 		}
 		return $this->value;
 	}
