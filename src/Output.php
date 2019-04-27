@@ -85,15 +85,8 @@ class Output {
 	 * @return string|array
 	 */
 	protected function apply_sanitize_callback( $output, $value ) {
-		if ( isset( $output['sanitize_callback'] ) && null !== $output['sanitize_callback'] ) {
-
-			// If the sanitize_callback is invalid, return the value.
-			if ( ! is_callable( $output['sanitize_callback'] ) ) {
-				return $value;
-			}
-			return call_user_func( $output['sanitize_callback'], $this->value );
-		}
-		return $value;
+		$output_obj = new Output_CSS( $output, $value );
+		return $output_obj->get_value();
 	}
 
 	/**
