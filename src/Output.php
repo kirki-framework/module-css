@@ -77,116 +77,6 @@ class Output {
 	}
 
 	/**
-	 * If we have a sanitize_callback defined, apply it to the value.
-	 *
-	 * @param array        $output The output args.
-	 * @param string|array $value  The value.
-	 *
-	 * @return string|array
-	 */
-	protected function apply_sanitize_callback( $output, $value ) {
-		if ( isset( $output['sanitize_callback'] ) && null !== $output['sanitize_callback'] ) {
-
-			// If the sanitize_callback is invalid, return the value.
-			if ( ! is_callable( $output['sanitize_callback'] ) ) {
-				return $value;
-			}
-			return call_user_func( $output['sanitize_callback'], $this->value );
-		}
-		return $value;
-	}
-
-	/**
-	 * If we have a value_pattern defined, apply it to the value.
-	 *
-	 * @param array        $output The output args.
-	 * @param string|array $value  The value.
-	 * @return string|array
-	 */
-	protected function apply_value_pattern( $output, $value ) {
-		if ( isset( $output['value_pattern'] ) && ! empty( $output['value_pattern'] ) && is_string( $output['value_pattern'] ) ) {
-			if ( ! is_array( $value ) ) {
-				$value = str_replace( '$', $value, $output['value_pattern'] );
-			}
-			if ( is_array( $value ) ) {
-				foreach ( array_keys( $value ) as $value_k ) {
-					if ( is_array( $value[ $value_k ] ) ) {
-						continue;
-					}
-					if ( isset( $output['choice'] ) ) {
-						if ( $output['choice'] === $value_k ) {
-							$value[ $output['choice'] ] = str_replace( '$', $value[ $output['choice'] ], $output['value_pattern'] );
-						}
-						continue;
-					}
-					$value[ $value_k ] = str_replace( '$', $value[ $value_k ], $output['value_pattern'] );
-				}
-			}
-			$value = $this->apply_pattern_replace( $output, $value );
-		}
-		return $value;
-	}
-
-	/**
-	 * If we have a value_pattern defined, apply it to the value.
-	 *
-	 * @param array        $output The output args.
-	 * @param string|array $value  The value.
-	 * @return string|array
-	 */
-	protected function apply_pattern_replace( $output, $value ) {
-		if ( isset( $output['pattern_replace'] ) && is_array( $output['pattern_replace'] ) ) {
-			$option_type = ( '' !== Kirki::get_config_param( $this->config_id, 'option_type' ) ) ? Kirki::get_config_param( $this->config_id, 'option_type' ) : 'theme_mod';
-			$option_name = Kirki::get_config_param( $this->config_id, 'option_name' );
-			$options     = [];
-			if ( $option_name ) {
-				$options = ( 'site_option' === $option_type ) ? get_site_option( $option_name ) : get_option( $option_name );
-			}
-			foreach ( $output['pattern_replace'] as $search => $replace ) {
-				$replacement = '';
-				switch ( $option_type ) {
-					case 'option':
-						if ( is_array( $options ) ) {
-							if ( $option_name ) {
-								$subkey      = str_replace( [ $option_name, '[', ']' ], '', $replace );
-								$replacement = ( isset( $options[ $subkey ] ) ) ? $options[ $subkey ] : '';
-								break;
-							}
-							$replacement = ( isset( $options[ $replace ] ) ) ? $options[ $replace ] : '';
-							break;
-						}
-						$replacement = get_option( $replace );
-						break;
-					case 'site_option':
-						$replacement = ( is_array( $options ) && isset( $options[ $replace ] ) ) ? $options[ $replace ] : get_site_option( $replace );
-						break;
-					case 'user_meta':
-						$user_id = get_current_user_id();
-						if ( $user_id ) {
-							$replacement = get_user_meta( $user_id, $replace, true );
-						}
-						break;
-					default:
-						$replacement = get_theme_mod( $replace );
-						if ( ! $replacement ) {
-							$replacement = Values::get_value( $this->field['kirki_config'], $replace );
-						}
-				}
-				$replacement = ( false === $replacement ) ? '' : $replacement;
-				if ( is_array( $value ) ) {
-					foreach ( $value as $k => $v ) {
-						$_val        = ( isset( $value[ $v ] ) ) ? $value[ $v ] : $v;
-						$value[ $k ] = str_replace( $search, $replacement, $_val );
-					}
-					return $value;
-				}
-				$value = str_replace( $search, $replacement, $value );
-			}
-		}
-		return $value;
-	}
-
-	/**
 	 * Parses the output arguments.
 	 * Calls the process_output method for each of them.
 	 *
@@ -194,50 +84,13 @@ class Output {
 	 */
 	protected function parse_output() {
 		foreach ( $this->output as $output ) {
-			$skip = false;
+			$output_obj = new Output_CSS( $output, $this->value, $this->field );
 
-			// Apply any sanitization callbacks defined.
-			$value = $this->apply_sanitize_callback( $output, $this->value );
-
-			// Skip if value is empty.
-			if ( '' === $this->value ) {
-				$skip = true;
+			if ( $output_obj->get_exclude() ) {
+				return;
 			}
 
-			// No need to proceed this if the current value is the same as in the "exclude" value.
-			if ( isset( $output['exclude'] ) && is_array( $output['exclude'] ) ) {
-				foreach ( $output['exclude'] as $exclude ) {
-					if ( is_array( $value ) ) {
-						if ( is_array( $exclude ) ) {
-							$diff1 = array_diff( $value, $exclude );
-							$diff2 = array_diff( $exclude, $value );
-
-							if ( empty( $diff1 ) && empty( $diff2 ) ) {
-								$skip = true;
-							}
-						}
-						// If 'choice' is defined check for sub-values too.
-						// Fixes https://github.com/aristath/kirki/issues/1416.
-						if ( isset( $output['choice'] ) && isset( $value[ $output['choice'] ] ) && $exclude == $value[ $output['choice'] ] ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-							$skip = true;
-						}
-					}
-					if ( $skip ) {
-						continue;
-					}
-
-					// Skip if value is defined as excluded.
-					if ( $exclude === $value || ( '' === $exclude && empty( $value ) ) ) {
-						$skip = true;
-					}
-				}
-			}
-			if ( $skip ) {
-				continue;
-			}
-
-			// Apply any value patterns defined.
-			$value = $this->apply_value_pattern( $output, $value );
+			$value = $output_obj->get_value();
 
 			if ( isset( $output['element'] ) && is_array( $output['element'] ) ) {
 				$output['element'] = array_unique( $output['element'] );
@@ -291,11 +144,11 @@ class Output {
 			if ( isset( $this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] ) && ! is_array( $this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] ) ) {
 				$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = (array) $this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ];
 			}
-			$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ][] = $output['prefix'] . $value . $output['units'] . $output['suffix'];
+			$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ][] = $value;
 			return;
 		}
 		if ( is_string( $value ) || is_numeric( $value ) ) {
-			$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = $output['prefix'] . $this->process_property_value( $output['property'], $value ) . $output['units'] . $output['suffix'];
+			$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = $this->process_property_value( $output['property'], $value );
 		}
 	}
 

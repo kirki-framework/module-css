@@ -31,8 +31,6 @@ class Background extends Output {
 			[
 				'media_query' => 'global',
 				'element'     => 'body',
-				'prefix'      => '',
-				'suffix'      => '',
 			]
 		);
 
@@ -40,11 +38,11 @@ class Background extends Output {
 
 			// See https://github.com/aristath/kirki/issues/1808.
 			if ( 'background-color' === $property && isset( $value['background-color'] ) && $value['background-color'] && ( ! isset( $value['background-image'] ) || empty( $value['background-image'] ) ) ) {
-				$this->styles[ $output['media_query'] ][ $output['element'] ]['background'] = $output['prefix'] . $this->process_property_value( $property, $value[ $property ] ) . $output['suffix'];
+				$this->styles[ $output['media_query'] ][ $output['element'] ]['background'] = $this->process_property_value( $property, $value[ $property ] );
 			}
 
 			if ( isset( $value[ $property ] ) && ! empty( $value[ $property ] ) ) {
-				$this->styles[ $output['media_query'] ][ $output['element'] ][ $property ] = $output['prefix'] . $this->process_property_value( $property, $value[ $property ] ) . $output['suffix'];
+				$this->styles[ $output['media_query'] ][ $output['element'] ][ $property ] = $this->process_property_value( $property, $value[ $property ] );
 			}
 		}
 	}

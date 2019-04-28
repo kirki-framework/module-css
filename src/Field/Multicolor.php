@@ -46,11 +46,8 @@ class Multicolor extends Output {
 				$output['media_query'] = 'global';
 			}
 
-			// If "suffix" is defined, add it to the value.
-			$output['suffix'] = ( isset( $output['suffix'] ) ) ? $output['suffix'] : '';
-
 			// Create the styles.
-			$this->styles[ $output['media_query'] ][ $output['element'] ][ $property ] = $sub_value . $output['suffix'];
+			$this->styles[ $output['media_query'] ][ $output['element'] ][ $property ] = $sub_value;
 
 		}
 	}

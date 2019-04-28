@@ -33,22 +33,19 @@ class Image extends Output {
 			$output,
 			[
 				'media_query' => 'global',
-				'prefix'      => '',
-				'units'       => '',
-				'suffix'      => '',
 			]
 		);
 		if ( is_array( $value ) ) {
 			if ( isset( $output['choice'] ) && $output['choice'] ) {
-				$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = $output['prefix'] . $this->process_property_value( $output['property'], $value[ $output['choice'] ] ) . $output['units'] . $output['suffix'];
+				$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = $this->process_property_value( $output['property'], $value[ $output['choice'] ] );
 				return;
 			}
 			if ( isset( $value['url'] ) ) {
-				$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = $output['prefix'] . $this->process_property_value( $output['property'], $value['url'] ) . $output['units'] . $output['suffix'];
+				$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = $this->process_property_value( $output['property'], $value['url'] );
 				return;
 			}
 			return;
 		}
-		$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = $output['prefix'] . $this->process_property_value( $output['property'], $value ) . $output['units'] . $output['suffix'];
+		$this->styles[ $output['media_query'] ][ $output['element'] ][ $output['property'] ] = $this->process_property_value( $output['property'], $value );
 	}
 }
