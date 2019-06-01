@@ -10,12 +10,12 @@
  * @since       3.0.0
  */
 
-namespace Kirki\Modules\CSS;
+namespace Kirki\Module\CSS;
 
 use Kirki\Core\Kirki;
 use Kirki\Core\Helper;
 use Kirki\Core\Values;
-use Kirki\Modules\CSS\Generator;
+use Kirki\Module\CSS\Generator;
 
 /**
  * The Module object.
