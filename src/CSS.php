@@ -20,7 +20,7 @@ use Kirki\Module\CSS\Generator;
 /**
  * The Module object.
  */
-class Module {
+class CSS {
 
 	/**
 	 * The object instance.
