@@ -10,7 +10,7 @@
  * @since       3.0.0
  */
 
-namespace Kirki\Module\CSS;
+namespace Kirki\Module;
 
 use Kirki\Core\Kirki;
 use Kirki\Core\Helper;
@@ -21,16 +21,6 @@ use Kirki\Module\CSS\Generator;
  * The Module object.
  */
 class CSS {
-
-	/**
-	 * The object instance.
-	 *
-	 * @static
-	 * @access private
-	 * @since 3.0.0
-	 * @var object
-	 */
-	private static $instance;
 
 	/**
 	 * The CSS array
@@ -63,27 +53,11 @@ class CSS {
 	/**
 	 * Constructor
 	 *
-	 * @access protected
+	 * @access public
 	 */
-	protected function __construct() {
+	public function __construct() {
 		add_action( 'kirki_field_init', [ $this, 'field_init' ] );
 		add_action( 'init', [ $this, 'init' ] );
-	}
-
-	/**
-	 * Gets an instance of this object.
-	 * Prevents duplicate instances which avoid artefacts and improves performance.
-	 *
-	 * @static
-	 * @access public
-	 * @since 3.0.0
-	 * @return object
-	 */
-	public static function get_instance() {
-		if ( ! self::$instance ) {
-			self::$instance = new self();
-		}
-		return self::$instance;
 	}
 
 	/**
