@@ -175,7 +175,6 @@ final class Generator {
 			'kirki-background' => '\Kirki\Module\CSS\Field\Background',
 			'kirki-dimensions' => '\Kirki\Module\CSS\Field\Dimensions',
 			'kirki-image'      => '\Kirki\Module\CSS\Field\Image',
-			'kirki-typography' => '\Kirki\Module\CSS\Field\Typography',
 			'kirki-multicolor' => '\Kirki\Module\CSS\Field\Multicolor',
 		];
 		$field_output_classes = apply_filters( 'kirki_output_control_classnames', $default_classnames );
